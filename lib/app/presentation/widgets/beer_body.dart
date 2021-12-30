@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pagination_with_bloc/app/data/bloc/beer_bloc.dart';
 import 'package:pagination_with_bloc/app/data/models/beer_model.dart';
+import 'package:pagination_with_bloc/app/injection/injection.dart';
 import 'package:pagination_with_bloc/app/presentation/widgets/beer_list_item.dart';
 
 class BeerBody extends StatefulWidget {
@@ -14,6 +15,8 @@ class BeerBody extends StatefulWidget {
 class _BeerBodyState extends State<BeerBody> {
   final List<BeerModel> _beers = [];
   final ScrollController _scrollController = ScrollController();
+
+  final beerBloc = getIt<BeerBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,7 @@ class _BeerBodyState extends State<BeerBody> {
           } else if (beerState is BeerSuccess) {
             _beers.addAll(beerState.beers);
             BlocProvider.of<BeerBloc>(context).isFetching = false;
+
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           } else if (beerState is BeerFailed && _beers.isEmpty) {
             return Column(
